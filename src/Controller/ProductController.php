@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Product;
 use App\Exception\ProductException;
+use App\Repository\ProductRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -14,6 +15,41 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ProductController extends AbstractController
 {
+    /**
+     * @Route("/{id}", name="update", methods={"PATCH", "PUT"})
+     * @param Product $product
+     * @param Request $request
+     * @return JsonResponse
+     * @throws \Exception
+     */
+    public function update(Product $product, Request $request): JsonResponse
+    {
+        $data = $request->request->all();
+
+        try {
+            $product->setName($data['name']);
+            $product->setDescription($data['description']);
+            $product->setContent($data['content']);
+            $product->setPrice($data['price']);
+            $product->setSlug($data['slug']);
+            $product->setUpdatedAt(
+                new \DateTime("now", new \DateTimeZone('America/Sao_Paulo'))
+            );
+
+            $manager = $this->getDoctrine()->getManager();
+            $manager->flush();
+
+            return $this->json([
+                'message' => 'Produto atualizado',
+                'product' => $product
+            ]);
+        } catch (ProductException $productException) {
+            return $this->json([
+                'error' => $productException
+            ]);
+        }
+    }
+
     /**
      * @Route("/", name="create", methods={"POST"})
      * @param Request $request
@@ -29,7 +65,7 @@ class ProductController extends AbstractController
             $product->setName($data['name']);
             $product->setDescription($data['description']);
             $product->setContent($data['content']);
-            $product->setPrice(intval($data['price']));
+            $product->setPrice($data['price']);
             $product->setSlug($data['slug']);
             $product->setIsActive(true);
             $product->setCreatedAt(
@@ -48,20 +84,51 @@ class ProductController extends AbstractController
                 'product' => $product
             ]);
         } catch (ProductException $productException) {
-            $this->json([
+           return $this->json([
                 'error' => $productException
-            ]);
+           ]);
         }
     }
 
     /**
      * @Route("/", name="index", methods={"GET"})
+     * @param ProductRepository $productRepository
+     * @return JsonResponse
      */
-    public function index(): JsonResponse
+    public function index(ProductRepository $productRepository): JsonResponse
     {
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/ProductController.php',
-        ]);
+        return $this->json($productRepository->findAll());
+    }
+
+    /**
+     * @Route("/{id}", name="show", methods={"GET"})
+     * @param Product $product
+     * @return JsonResponse
+     */
+    public function show(Product $product): JsonResponse
+    {
+        return $this->json($product);
+    }
+
+    /**
+     * @Route("/{id}", name="remove", methods={"DELETE"})
+     * @param Product $product
+     * @return JsonResponse
+     */
+    public function remove(Product $product): JsonResponse
+    {
+        try {
+            $manager = $this->getDoctrine()->getManager();
+            $manager->remove($product);
+            $manager->flush();
+
+            return $this->json([
+                'message' => 'Produto removido',
+            ]);
+        } catch (ProductException $productException) {
+            return $this->json([
+                'error' => $productException
+            ]);
+        }
     }
 }
