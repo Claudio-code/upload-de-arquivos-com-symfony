@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ProductRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
 
@@ -58,6 +59,17 @@ class Product implements JsonSerializable
      * @ORM\Column(type="datetime")
      */
     private \DateTimeInterface $updatedAt;
+
+    /**
+     * @var ArrayCollection
+     * @ORM\ManyToMany(targetEntity="App\Entity\Category", inversedBy="productCollections")
+     */
+    private $categoryCollection;
+
+    public function __construct()
+    {
+        $this->categoryCollection = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -156,6 +168,22 @@ class Product implements JsonSerializable
         $this->updatedAt = $updatedAt;
 
         return $this;
+    }
+
+    /**
+     * @return ArrayCollection
+     */
+    public function getCategoryCollection(): ?ArrayCollection
+    {
+        return $this->categoryCollection;
+    }
+
+    /**
+     * @param ArrayCollection $categoryCollection
+     */
+    public function setCategoryCollection(ArrayCollection $categoryCollection): void
+    {
+        $this->categoryCollection = $categoryCollection;
     }
 
     public function jsonSerialize(): array
