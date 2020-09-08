@@ -4,11 +4,15 @@ namespace App\Controller;
 
 use App\Entity\Product;
 use App\Exception\ProductException;
+use App\Form\ProductType;
 use App\Repository\ProductRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use DateTime;
+use DateTimeZone;
+use Exception;
 
 /**
  * @Route("/product", name="products_")
@@ -20,22 +24,18 @@ class ProductController extends AbstractController
      * @param Product $product
      * @param Request $request
      * @return JsonResponse
-     * @throws \Exception
+     * @throws Exception
      */
     public function update(Product $product, Request $request): JsonResponse
     {
         $data = $request->request->all();
+        $form = $this->createForm(ProductType::class, $product);
+        $form->submit($data);
+        $product->setUpdatedAt(
+            new DateTime("now", new DateTimeZone('America/Sao_Paulo'))
+        );
 
         try {
-            $product->setName($data['name']);
-            $product->setDescription($data['description']);
-            $product->setContent($data['content']);
-            $product->setPrice($data['price']);
-            $product->setSlug($data['slug']);
-            $product->setUpdatedAt(
-                new \DateTime("now", new \DateTimeZone('America/Sao_Paulo'))
-            );
-
             $manager = $this->getDoctrine()->getManager();
             $manager->flush();
 
@@ -54,27 +54,23 @@ class ProductController extends AbstractController
      * @Route("/", name="create", methods={"POST"})
      * @param Request $request
      * @return JsonResponse
-     * @throws \Exception
+     * @throws Exception
      */
     public function create(Request $request): JsonResponse
     {
         $data = $request->request->all();
+        $product = new Product();
+        $form = $this->createForm(ProductType::class, $product);
+        $form->submit($data);
+        $product->setIsActive(true);
+        $product->setCreatedAt(
+            new DateTime("now", new DateTimeZone('America/Sao_Paulo'))
+        );
+        $product->setUpdatedAt(
+            new DateTime("now", new DateTimeZone('America/Sao_Paulo'))
+        );
 
         try {
-            $product = new Product();
-            $product->setName($data['name']);
-            $product->setDescription($data['description']);
-            $product->setContent($data['content']);
-            $product->setPrice($data['price']);
-            $product->setSlug($data['slug']);
-            $product->setIsActive(true);
-            $product->setCreatedAt(
-                new \DateTime("now", new \DateTimeZone('America/Sao_Paulo'))
-            );
-            $product->setUpdatedAt(
-                new \DateTime("now", new \DateTimeZone('America/Sao_Paulo'))
-            );
-
             $manager = $this->getDoctrine()->getManager();
             $manager->persist($product);
             $manager->flush();

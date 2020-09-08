@@ -4,12 +4,13 @@ namespace App\Entity;
 
 use App\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
+use JsonSerializable;
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
  * @ORM\Table(name="products")
  */
-class Product implements \JsonSerializable
+class Product implements JsonSerializable
 {
     /**
      * @ORM\Id
