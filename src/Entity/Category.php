@@ -6,12 +6,13 @@ use App\Repository\CategoryRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use DateTimeInterface;
+use JsonSerializable;
 
 /**
  * @ORM\Entity(repositoryClass=CategoryRepository::class)
  * @ORM\Table(name="categories")
  */
-class Category
+class Category implements JsonSerializable
 {
     /**
      * @ORM\Id
@@ -46,14 +47,13 @@ class Category
     private DateTimeInterface $updatedAt;
 
     /**
-     * @var ArrayCollection
-     * @ORM\ManyToMany(targetEntity="App\Entity\Product", mappedBy="categoryCollection")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Product", mappedBy="categories")
      */
-    private $productCollections;
+    private $products;
 
     public function __construct()
     {
-        $this->productCollections = new ArrayCollection();
+        $this->products = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -124,16 +124,28 @@ class Category
     /**
      * @return ArrayCollection
      */
-    public function getProductCollections(): ?ArrayCollection
+    public function getProducts(): ArrayCollection
     {
-        return $this->productCollections;
+        return $this->products;
     }
 
     /**
-     * @param ArrayCollection $productCollections
+     * @param ArrayCollection $products
      */
-    public function setProductCollections(ArrayCollection $productCollections): void
+    public function setProducts(ArrayCollection $products): void
     {
-        $this->productCollections = $productCollections;
+        $this->products = $products;
+    }
+
+    public function jsonSerialize(): array
+    {
+        return [
+            'id' => $this->getId(),
+            'name' => $this->getName(),
+            'slug' => $this->getSlug(),
+            'description' => $this->getDescription(),
+            'createdAt' => $this->getCreatedAt(),
+            'updatedAt' => $this->getUpdatedAt(),
+        ];
     }
 }

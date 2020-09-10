@@ -62,6 +62,9 @@ class ProductController extends AbstractController
         $product = new Product();
         $form = $this->createForm(ProductType::class, $product);
         $form->submit($data);
+//        var_dump($product);
+//        return $this->json(['ok' => true]);
+
         $product->setIsActive(true);
         $product->setCreatedAt(
             new DateTime("now", new DateTimeZone('America/Sao_Paulo'))

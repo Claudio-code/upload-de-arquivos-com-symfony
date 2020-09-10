@@ -6,6 +6,7 @@ use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
 use JsonSerializable;
+use DateTimeInterface;
 
 /**
  * @ORM\Entity(repositoryClass=ProductRepository::class)
@@ -53,22 +54,21 @@ class Product implements JsonSerializable
     /**
      * @ORM\Column(type="datetime")
      */
-    private \DateTimeInterface $createdAt;
+    private DateTimeInterface $createdAt;
 
     /**
      * @ORM\Column(type="datetime")
      */
-    private \DateTimeInterface $updatedAt;
+    private DateTimeInterface $updatedAt;
 
     /**
-     * @var ArrayCollection
-     * @ORM\ManyToMany(targetEntity="App\Entity\Category", inversedBy="productCollections")
+     * @ORM\ManyToMany(targetEntity="App\Entity\Category", inversedBy="products")
      */
-    private $categoryCollection;
+    private $categories;
 
     public function __construct()
     {
-        $this->categoryCollection = new ArrayCollection();
+        $this->categories = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -173,17 +173,17 @@ class Product implements JsonSerializable
     /**
      * @return ArrayCollection
      */
-    public function getCategoryCollection(): ?ArrayCollection
+    public function getCategories()
     {
-        return $this->categoryCollection;
+        return $this->categories;
     }
 
     /**
-     * @param ArrayCollection $categoryCollection
+     * @param ArrayCollection $categories
      */
-    public function setCategoryCollection(ArrayCollection $categoryCollection): void
+    public function setCategories(ArrayCollection $categories): void
     {
-        $this->categoryCollection = $categoryCollection;
+        $this->categories = $categories;
     }
 
     public function jsonSerialize(): array
@@ -198,6 +198,7 @@ class Product implements JsonSerializable
             'isActive' => $this->getIsActive(),
             'createdAt' => $this->getCreatedAt(),
             'updatedAt' => $this->getUpdatedAt(),
+            'categories' => $this->getCategories()->toArray(),
         ];
     }
 }
