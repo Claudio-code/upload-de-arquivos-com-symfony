@@ -13,6 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use DateTime;
 use DateTimeZone;
 use Exception;
+use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 
 /**
@@ -95,16 +96,19 @@ class UserController extends AbstractController
     /**
      * @Route("/", name="create", methods={"POST"})
      * @param Request $request
+     * @param UserPasswordEncoderInterface $passwordEncoder
      * @return JsonResponse
      * @throws Exception
      */
-    public function create(Request $request): JsonResponse
+    public function create(Request $request, UserPasswordEncoderInterface $passwordEncoder): JsonResponse
     {
         $userData = $request->request->all();
         $user = new User();
         $form = $this->createForm(UserType::class, $user);
         $form->submit($userData);
 
+        $password = $passwordEncoder->encodePassword($user, $userData['password']);
+        $user->setPassword($password);
         $user->setIsActive(true);
         $user->setCreatedAt(
             new DateTime("now", new DateTimeZone('America/Sao_Paulo'))

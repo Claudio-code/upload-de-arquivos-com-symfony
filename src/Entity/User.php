@@ -6,12 +6,13 @@ use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
 use DateTimeInterface;
 use JsonSerializable;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 /**
  * @ORM\Entity(repositoryClass=UserRepository::class)
  * @ORM\Table(name="users")
  */
-class User implements JsonSerializable
+class User implements JsonSerializable, UserInterface
 {
     /**
      * @ORM\Id
@@ -54,6 +55,11 @@ class User implements JsonSerializable
      * @ORM\Column(type="datetime")
      */
     private DateTimeInterface $updatedAt;
+
+    /**
+     * @ORM\Column(type="json")
+     */
+    private $roles;
 
     public function getId(): ?int
     {
@@ -144,16 +150,50 @@ class User implements JsonSerializable
         return $this;
     }
 
+    public function getRoles()
+    {
+        return $this->roles;
+    }
+
+    public function setRoles($roles): self
+    {
+        if (is_array($roles)) {
+            $this->roles = implode(',', $roles);
+        }
+        if (is_string($roles)) {
+            $this->roles = $roles;
+        }
+
+        return $this;
+    }
+
+    public function getSalt()
+    {
+        // TODO: Implement getSalt() method.
+    }
+
+    public function getUsername(): ?string
+    {
+        return $this->email;
+    }
+
+    public function eraseCredentials()
+    {
+        // TODO: Implement eraseCredentials() method.
+    }
+
     public function jsonSerialize(): array
     {
         return [
-          'id' => $this->getId(),
-          'firstName' => $this->getFirstName(),
-          'lastName' => $this->getLastName(),
-          'email' => $this->getEmail(),
-          'isActive' => $this->getIsActive(),
-          'createdAt' => $this->getCreatedAt(),
-          'updatedAt' => $this->getUpdatedAt(),
+            'id' => $this->getId(),
+            'firstName' => $this->getFirstName(),
+            'lastName' => $this->getLastName(),
+            'email' => $this->getEmail(),
+            'roles' => $this->getRoles(),
+            'isActive' => $this->getIsActive(),
+            'password' => $this->getPassword(),
+            'createdAt' => $this->getCreatedAt(),
+            'updatedAt' => $this->getUpdatedAt(),
         ];
     }
 }
