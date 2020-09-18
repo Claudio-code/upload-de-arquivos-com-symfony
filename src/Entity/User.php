@@ -152,10 +152,13 @@ class User implements JsonSerializable, UserInterface
 
     public function getRoles()
     {
-        return $this->roles;
+        $roles = [];
+        $roles[] = $this->roles;
+
+        return $roles;
     }
 
-    public function setRoles($roles): self
+    public function setRoles($roles)
     {
         if (is_array($roles)) {
             $this->roles = implode(',', $roles);
@@ -164,7 +167,7 @@ class User implements JsonSerializable, UserInterface
             $this->roles = $roles;
         }
 
-        return $this;
+        return $this->roles;
     }
 
     public function getSalt()
