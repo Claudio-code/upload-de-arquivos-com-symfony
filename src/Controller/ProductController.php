@@ -62,8 +62,6 @@ class ProductController extends AbstractController
         $product = new Product();
         $form = $this->createForm(ProductType::class, $product);
         $form->submit($data);
-//        var_dump($product);
-//        return $this->json(['ok' => true]);
 
         $product->setIsActive(true);
         $product->setCreatedAt(
@@ -83,7 +81,7 @@ class ProductController extends AbstractController
                 'product' => $product
             ]);
         } catch (ProductException $productException) {
-           return $this->json([
+            return $this->json([
                 'error' => $productException
            ]);
         }
@@ -92,10 +90,17 @@ class ProductController extends AbstractController
     /**
      * @Route("/", name="index", methods={"GET"})
      * @param ProductRepository $productRepository
+     * @param Request $request
      * @return JsonResponse
      */
-    public function index(ProductRepository $productRepository): JsonResponse
+    public function index(ProductRepository $productRepository, Request $request): JsonResponse
     {
+        if ($request->request->has('filters')) {
+            return $this->json($productRepository->getProductsByFilters(
+                $request->request->get('filters')
+            ));
+        }
+
         return $this->json($productRepository->findAll());
     }
 
