@@ -14,71 +14,39 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class ProductRepository extends ServiceEntityRepository
 {
+    use FilterTransform;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Product::class);
     }
 
     /**
-     * @param string $filters
+     * @param mixed $filters
+     * @param mixed $limit
      * @param mixed $fields
-     * @param int $limit
-     * @return int|mixed|string
+     * @return array
      */
-    public function getProductsByFilters(string $filters, int $limit = 2, $fields = false): array
+    public function getProductsByFilters($filters = false, $limit = false, $fields = false): array
     {
-        $fetchFilters = explode(';', $filters);
         $result = $this->createQueryBuilder('p');
-        $result->setMaxResults($limit);
 
-        foreach ($fetchFilters as $filter) {
-            $fetchFilter = explode(':', $filter);
+        if (is_string($limit)) {
+            $result->setMaxResults($limit);
+        }
 
-            if (!$fetchFilter[0] || !$fetchFilter[1] || !$fetchFilter[2]) {
-                continue;
+        if (is_string($filters)) {
+            foreach ($this->transformFilters($filters) as $filter) {
+                $result->andWhere("p.{$filter[0]} {$filter[1]} :{$filter[0]}")
+                    ->setParameter($filter[0], $filter[2]);
             }
-
-            $result->andWhere("p.{$fetchFilter[0]} {$fetchFilter[1]} :{$fetchFilter[0]}")
-                ->setParameter($fetchFilter[0], $fetchFilter[2]);
         }
 
         if (is_string($fields)) {
-            $fetchFields = explode(',', $fields);
-            $fetchFields = array_map(fn (string $line) => "p.{$line}", $fetchFields);
-            $fetchFields = implode(', ', $fetchFields);
-
+            $fetchFields = $this->transformFields($fields, 'p');
             $result->select($fetchFields);
         }
 
         return $result->getQuery()->getResult();
     }
-
-    // /**
-    //  * @return Product[] Returns an array of Product objects
-    //  */
-    /*
-    public function findByExampleField($value)
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('p.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult()
-        ;
-    }
-    */
-
-    /*
-    public function findOneBySomeField($value): ?Product
-    {
-        return $this->createQueryBuilder('p')
-            ->andWhere('p.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult()
-        ;
-    }
-    */
 }

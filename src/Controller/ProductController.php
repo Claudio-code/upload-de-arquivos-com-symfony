@@ -20,8 +20,8 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
  */
 class ProductController extends AbstractController
 {
-	use ErrorsValidateEntity;
-	
+    use ErrorsValidateEntity;
+
     /**
      * @Route("/{id}", name="update", methods={"PATCH", "PUT"})
      * @param Product $product
@@ -53,13 +53,13 @@ class ProductController extends AbstractController
         }
     }
 
-	/**
-	 * @Route("/", name="create", methods={"POST"})
-	 * @param Request $request
-	 * @param ValidatorInterface $validator
-	 * @return JsonResponse
-	 * @throws Exception
-	 */
+    /**
+     * @Route("/", name="create", methods={"POST"})
+     * @param Request $request
+     * @param ValidatorInterface $validator
+     * @return JsonResponse
+     * @throws Exception
+     */
     public function create(Request $request, ValidatorInterface $validator): JsonResponse
     {
         $data = $request->request->all();
@@ -74,11 +74,11 @@ class ProductController extends AbstractController
         $product->setUpdatedAt(
             new DateTime("now", new DateTimeZone('America/Sao_Paulo'))
         );
-		
+
         $errors = $this->validate($validator, $product);
         if ($errors) {
-			return $this->json([ 'errors' => $errors ]);
-		}
+            return $this->json(['errors' => $errors]);
+        }
 
         try {
             $manager = $this->getDoctrine()->getManager();
@@ -92,7 +92,7 @@ class ProductController extends AbstractController
         } catch (ProductException $productException) {
             return $this->json([
                 'error' => $productException
-           ]);
+            ]);
         }
     }
 
@@ -106,17 +106,13 @@ class ProductController extends AbstractController
     {
         $fields = $request->query->get('fields', false);
         $filters = $request->query->get('filters', null);
-        $limit = $request->query->get('limit', 2);
-        
-        if ($filters) {
-            return $this->json($productRepository->getProductsByFilters(
-                $filters,
-                $limit,
-                $fields
-            ));
-        }
+        $limit = $request->query->get('limit', false);
 
-        return $this->json($productRepository->findAll());
+        return $this->json($productRepository->getProductsByFilters(
+            $filters,
+            $limit,
+            $fields
+        ));
     }
 
     /**
