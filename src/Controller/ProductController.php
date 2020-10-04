@@ -13,12 +13,15 @@ use Symfony\Component\Routing\Annotation\Route;
 use DateTime;
 use DateTimeZone;
 use Exception;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * @Route("/product", name="products_")
  */
 class ProductController extends AbstractController
 {
+	use ErrorsValidateEntity;
+	
     /**
      * @Route("/{id}", name="update", methods={"PATCH", "PUT"})
      * @param Product $product
@@ -50,13 +53,14 @@ class ProductController extends AbstractController
         }
     }
 
-    /**
-     * @Route("/", name="create", methods={"POST"})
-     * @param Request $request
-     * @return JsonResponse
-     * @throws Exception
-     */
-    public function create(Request $request): JsonResponse
+	/**
+	 * @Route("/", name="create", methods={"POST"})
+	 * @param Request $request
+	 * @param ValidatorInterface $validator
+	 * @return JsonResponse
+	 * @throws Exception
+	 */
+    public function create(Request $request, ValidatorInterface $validator): JsonResponse
     {
         $data = $request->request->all();
         $product = new Product();
@@ -70,6 +74,11 @@ class ProductController extends AbstractController
         $product->setUpdatedAt(
             new DateTime("now", new DateTimeZone('America/Sao_Paulo'))
         );
+		
+        $errors = $this->validate($validator, $product);
+        if ($errors) {
+			return $this->json([ 'errors' => $errors ]);
+		}
 
         try {
             $manager = $this->getDoctrine()->getManager();

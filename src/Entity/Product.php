@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\ProductRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
 use JsonSerializable;
 use DateTimeInterface;
 
@@ -23,6 +24,8 @@ class Product implements JsonSerializable
 
     /**
      * @ORM\Column(type="string", length=255)
+	 * @Assert\NotBlank(message="o nome não pode ser nulo", payload={"severity"="error"})
+	 * @Assert\Type(type="\string")
      */
     private string $name;
 
