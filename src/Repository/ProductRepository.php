@@ -22,14 +22,21 @@ class ProductRepository extends ServiceEntityRepository
     /**
      * @param string $filters
      * @param mixed $fields
+     * @param int $limit
+     * @return int|mixed|string
      */
-    public function getProductsByFilters(string $filters, $fields = false)
+    public function getProductsByFilters(string $filters, int $limit = 2, $fields = false): array
     {
         $fetchFilters = explode(';', $filters);
         $result = $this->createQueryBuilder('p');
+        $result->setMaxResults($limit);
 
         foreach ($fetchFilters as $filter) {
             $fetchFilter = explode(':', $filter);
+
+            if (!$fetchFilter[0] || !$fetchFilter[1] || !$fetchFilter[2]) {
+                continue;
+            }
 
             $result->andWhere("p.{$fetchFilter[0]} {$fetchFilter[1]} :{$fetchFilter[0]}")
                 ->setParameter($fetchFilter[0], $fetchFilter[2]);

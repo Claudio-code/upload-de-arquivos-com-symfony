@@ -97,10 +97,12 @@ class ProductController extends AbstractController
     {
         $fields = $request->query->get('fields', false);
         $filters = $request->query->get('filters', null);
+        $limit = $request->query->get('limit', 2);
         
         if ($filters) {
             return $this->json($productRepository->getProductsByFilters(
                 $filters,
+                $limit,
                 $fields
             ));
         }
