@@ -15,7 +15,6 @@ use DateTimeZone;
 use Exception;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
-
 /**
  * @Route("/user", name="user")
  */
@@ -48,7 +47,7 @@ class UserController extends AbstractController
      * @return JsonResponse
      * @throws Exception
      */
-    public function update(User $user, Request $request): JsonResponse
+    public function update(User $user, Request $request, UserPasswordEncoderInterface $passwordEncoder): JsonResponse
     {
         try {
             $userData = $request->request->all();
@@ -57,6 +56,17 @@ class UserController extends AbstractController
             $user->setUpdatedAt(
                 new DateTime("now", new DateTimeZone('America/Sao_Paulo'))
             );
+
+            $rolesLoggedUser = $this->getUser()->getRoles();
+            if ($request->request->has('role') && in_array('ROLE_ADMIN', $rolesLoggedUser)) {
+                $user->setRoles($request->request->get('role'));
+            }
+
+            if ($request->request->has('password')) {
+                $password = $passwordEncoder->encodePassword($user, $userData['password']);
+                $user->setPassword($password);
+            }
+
             $manager = $this->getDoctrine()->getManager();
             $manager->flush();
 
