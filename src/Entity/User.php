@@ -57,9 +57,9 @@ class User implements JsonSerializable, UserInterface
     private DateTimeInterface $updatedAt;
 
     /**
-     * @ORM\Column(type="json")
+     * @ORM\Column(type="string")
      */
-    private $roles;
+    private string $roles;
 
     public function getId(): ?int
     {
