@@ -20,9 +20,10 @@ class ProductRepository extends ServiceEntityRepository
     }
 
     /**
-     * @param string @$filters
+     * @param string $filters
+     * @param mixed $fields
      */
-    public function getProductsByFilters(string $filters)
+    public function getProductsByFilters(string $filters, $fields = false)
     {
         $fetchFilters = explode(';', $filters);
         $result = $this->createQueryBuilder('p');
@@ -32,6 +33,14 @@ class ProductRepository extends ServiceEntityRepository
 
             $result->andWhere("p.{$fetchFilter[0]} {$fetchFilter[1]} :{$fetchFilter[0]}")
                 ->setParameter($fetchFilter[0], $fetchFilter[2]);
+        }
+
+        if (is_string($fields)) {
+            $fetchFields = explode(',', $fields);
+            $fetchFields = array_map(fn (string $line) => "p.{$line}", $fetchFields);
+            $fetchFields = implode(', ', $fetchFields);
+
+            $result->select($fetchFields);
         }
 
         return $result->getQuery()->getResult();

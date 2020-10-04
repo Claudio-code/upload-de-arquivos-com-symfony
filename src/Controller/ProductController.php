@@ -95,9 +95,13 @@ class ProductController extends AbstractController
      */
     public function index(ProductRepository $productRepository, Request $request): JsonResponse
     {
-        if ($request->request->has('filters')) {
+        $fields = $request->query->get('fields', false);
+        $filters = $request->query->get('filters', null);
+        
+        if ($filters) {
             return $this->json($productRepository->getProductsByFilters(
-                $request->request->get('filters')
+                $filters,
+                $fields
             ));
         }
 
