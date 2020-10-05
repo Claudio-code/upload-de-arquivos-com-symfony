@@ -6,6 +6,7 @@ use App\Entity\Product;
 use App\Exception\ProductException;
 use App\Form\ProductType;
 use App\Repository\ProductRepository;
+use App\Service\PaginatorFactory;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -102,17 +103,19 @@ class ProductController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
-    public function index(ProductRepository $productRepository, Request $request): JsonResponse
-    {
+    public function index(
+        ProductRepository $productRepository,
+        Request $request,
+        PaginatorFactory $paginatorFactory
+    ): JsonResponse {
         $fields = $request->query->get('fields', false);
         $filters = $request->query->get('filters', null);
         $limit = $request->query->get('limit', false);
 
-        return $this->json($productRepository->getProductsByFilters(
-            $filters,
-            $limit,
-            $fields
-        ));
+        $products = $productRepository->getProductsByFilters($filters, $limit, $fields);
+        $productsResult = $paginatorFactory->paginate($products, $request, 'products_index');
+
+        return $this->json($productsResult);
     }
 
     /**
