@@ -10,9 +10,8 @@ trait FilterTransform
         $fetchFields = array_map(function (string $line) use ($tableAlies) {
             return "{$tableAlies}.{$line}";
         }, $fetchFields);
-        $fetchFields = implode(', ', $fetchFields);
 
-        return $fetchFields;
+        return implode(', ', $fetchFields);
     }
 
     private function transformFilters(string $filters): array

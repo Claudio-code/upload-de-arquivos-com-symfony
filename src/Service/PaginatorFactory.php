@@ -2,9 +2,9 @@
 
 namespace App\Service;
 
-use Symfony\Component\HttpFoundation\Request;
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
+use Symfony\Component\HttpFoundation\Request;
 
 class PaginatorFactory
 {
@@ -16,18 +16,17 @@ class PaginatorFactory
 
         $paginator
             ->setMaxPerPage(3)
-            ->setCurrentPage($currentPage);
+            ->setCurrentPage($currentPage)
+        ;
         $data = [];
 
         foreach ($paginator->getCurrentPageResults() as $item) {
             $data[] = $item;
         }
 
-        $paginationResult = [
+        return [
             'data' => $paginator->getCurrentPageResults(),
-            'total' => $paginator->getNbResults()
+            'total' => $paginator->getNbResults(),
         ];
-
-        return $paginationResult;
     }
 }

@@ -3,9 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\CategoryRepository;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\Mapping as ORM;
-use DateTimeInterface;
 use JsonSerializable;
 
 /**
@@ -97,41 +97,35 @@ class Category implements JsonSerializable
         return $this;
     }
 
-    public function getCreatedAt(): ?\DateTimeInterface
+    public function getCreatedAt(): ?DateTimeInterface
     {
         return $this->createdAt;
     }
 
-    public function setCreatedAt(\DateTimeInterface $createdAt): self
+    public function setCreatedAt(DateTimeInterface $createdAt): self
     {
         $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getUpdatedAt(): ?\DateTimeInterface
+    public function getUpdatedAt(): ?DateTimeInterface
     {
         return $this->updatedAt;
     }
 
-    public function setUpdatedAt(\DateTimeInterface $updatedAt): self
+    public function setUpdatedAt(DateTimeInterface $updatedAt): self
     {
         $this->updatedAt = $updatedAt;
 
         return $this;
     }
 
-    /**
-     * @return ArrayCollection
-     */
     public function getProducts(): ArrayCollection
     {
         return $this->products;
     }
 
-    /**
-     * @param ArrayCollection $products
-     */
     public function setProducts(ArrayCollection $products): void
     {
         $this->products = $products;

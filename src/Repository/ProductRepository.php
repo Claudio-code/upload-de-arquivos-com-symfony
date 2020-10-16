@@ -7,8 +7,8 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method Product|null find($id, $lockMode = null, $lockVersion = null)
- * @method Product|null findOneBy(array $criteria, array $orderBy = null)
+ * @method null|Product find($id, $lockMode = null, $lockVersion = null)
+ * @method null|Product findOneBy(array $criteria, array $orderBy = null)
  * @method Product[]    findAll()
  * @method Product[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
@@ -25,7 +25,6 @@ class ProductRepository extends ServiceEntityRepository
      * @param mixed $filters
      * @param mixed $limit
      * @param mixed $fields
-     * @return array
      */
     public function getProductsByFilters($filters = false, $limit = false, $fields = false): array
     {
@@ -38,7 +37,8 @@ class ProductRepository extends ServiceEntityRepository
         if (is_string($filters)) {
             foreach ($this->transformFilters($filters) as $filter) {
                 $result->andWhere("p.{$filter[0]} {$filter[1]} :{$filter[0]}")
-                    ->setParameter($filter[0], $filter[2]);
+                    ->setParameter($filter[0], $filter[2])
+                ;
             }
         }
 

@@ -7,13 +7,13 @@ use App\Exception\ProductException;
 use App\Form\ProductType;
 use App\Repository\ProductRepository;
 use App\Service\PaginatorFactory;
+use DateTime;
+use DateTimeZone;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use DateTime;
-use DateTimeZone;
-use Exception;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
@@ -25,9 +25,7 @@ class ProductController extends AbstractController
 
     /**
      * @Route("/{id}", name="update", methods={"PATCH", "PUT"})
-     * @param Product $product
-     * @param Request $request
-     * @return JsonResponse
+     *
      * @throws Exception
      */
     public function update(Product $product, Request $request): JsonResponse
@@ -36,7 +34,7 @@ class ProductController extends AbstractController
         $form = $this->createForm(ProductType::class, $product);
         $form->submit($data);
         $product->setUpdatedAt(
-            new DateTime("now", new DateTimeZone('America/Sao_Paulo'))
+            new DateTime('now', new DateTimeZone('America/Sao_Paulo'))
         );
 
         try {
@@ -45,20 +43,18 @@ class ProductController extends AbstractController
 
             return $this->json([
                 'message' => 'Produto atualizado',
-                'product' => $product
+                'product' => $product,
             ]);
         } catch (ProductException $productException) {
             return $this->json([
-                'error' => $productException
+                'error' => $productException,
             ]);
         }
     }
 
     /**
      * @Route("/", name="create", methods={"POST"})
-     * @param Request $request
-     * @param ValidatorInterface $validator
-     * @return JsonResponse
+     *
      * @throws Exception
      */
     public function create(Request $request, ValidatorInterface $validator): JsonResponse
@@ -70,10 +66,10 @@ class ProductController extends AbstractController
 
         $product->setIsActive(true);
         $product->setCreatedAt(
-            new DateTime("now", new DateTimeZone('America/Sao_Paulo'))
+            new DateTime('now', new DateTimeZone('America/Sao_Paulo'))
         );
         $product->setUpdatedAt(
-            new DateTime("now", new DateTimeZone('America/Sao_Paulo'))
+            new DateTime('now', new DateTimeZone('America/Sao_Paulo'))
         );
 
         $errors = $this->validate($validator, $product);
@@ -88,20 +84,17 @@ class ProductController extends AbstractController
 
             return $this->json([
                 'message' => 'Produto cadastrado',
-                'product' => $product
+                'product' => $product,
             ]);
         } catch (ProductException $productException) {
             return $this->json([
-                'error' => $productException
+                'error' => $productException,
             ]);
         }
     }
 
     /**
      * @Route("/", name="index", methods={"GET"})
-     * @param ProductRepository $productRepository
-     * @param Request $request
-     * @return JsonResponse
      */
     public function index(
         ProductRepository $productRepository,
@@ -120,8 +113,6 @@ class ProductController extends AbstractController
 
     /**
      * @Route("/{id}", name="show", methods={"GET"})
-     * @param Product $product
-     * @return JsonResponse
      */
     public function show(Product $product): JsonResponse
     {
@@ -130,8 +121,6 @@ class ProductController extends AbstractController
 
     /**
      * @Route("/{id}", name="remove", methods={"DELETE"})
-     * @param Product $product
-     * @return JsonResponse
      */
     public function remove(Product $product): JsonResponse
     {
@@ -145,7 +134,7 @@ class ProductController extends AbstractController
             ]);
         } catch (ProductException $productException) {
             return $this->json([
-                'error' => $productException
+                'error' => $productException,
             ]);
         }
     }

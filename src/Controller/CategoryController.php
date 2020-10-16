@@ -5,13 +5,13 @@ namespace App\Controller;
 use App\Entity\Category;
 use App\Form\CategoryType;
 use App\Repository\CategoryRepository;
+use DateTime;
+use DateTimeZone;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use DateTime;
-use Exception;
-use DateTimeZone;
 
 /**
  * @Route("/category", name="category_")
@@ -20,8 +20,6 @@ class CategoryController extends AbstractController
 {
     /**
      * @Route("/", name="index", methods={"GET"})
-     * @param CategoryRepository $categoryRepository
-     * @return JsonResponse
      */
     public function index(CategoryRepository $categoryRepository): JsonResponse
     {
@@ -30,8 +28,6 @@ class CategoryController extends AbstractController
 
     /**
      * @Route("/{id}", name="show", methods={"GET"})
-     * @param Category $category
-     * @return JsonResponse
      */
     public function show(Category $category): JsonResponse
     {
@@ -40,8 +36,6 @@ class CategoryController extends AbstractController
 
     /**
      * @Route("/{id}", name="remove", methods={"DELETE"})
-     * @param Category $category
-     * @return JsonResponse
      */
     public function remove(Category $category): JsonResponse
     {
@@ -56,8 +50,7 @@ class CategoryController extends AbstractController
 
     /**
      * @Route("/", name="create", methods={"POST"})
-     * @param Request $request
-     * @return JsonResponse
+     *
      * @throws Exception
      */
     public function create(Request $request): JsonResponse
@@ -68,10 +61,10 @@ class CategoryController extends AbstractController
         $form->submit($data);
 
         $category->setCreatedAt(
-            new DateTime("now", new DateTimeZone('America/Sao_Paulo'))
+            new DateTime('now', new DateTimeZone('America/Sao_Paulo'))
         );
         $category->setUpdatedAt(
-            new DateTime("now", new DateTimeZone('America/Sao_Paulo'))
+            new DateTime('now', new DateTimeZone('America/Sao_Paulo'))
         );
 
         $doctrine = $this->getDoctrine()->getManager();
@@ -79,15 +72,13 @@ class CategoryController extends AbstractController
         $doctrine->flush();
 
         return $this->json([
-            'message' => 'Categoria cadastrada com sucesso.'
+            'message' => 'Categoria cadastrada com sucesso.',
         ]);
     }
 
     /**
      * @Route("/{id}", name="update", methods={"PUT", "PATCH"})
-     * @param Category $category
-     * @param Request $request
-     * @return JsonResponse
+     *
      * @throws Exception
      */
     public function update(Category $category, Request $request): JsonResponse
@@ -97,14 +88,14 @@ class CategoryController extends AbstractController
         $form->submit($data);
 
         $category->setUpdatedAt(
-            new DateTime("now", new DateTimeZone('America/Sao_Paulo'))
+            new DateTime('now', new DateTimeZone('America/Sao_Paulo'))
         );
 
         $doctrine = $this->getDoctrine()->getManager();
         $doctrine->flush();
 
         return $this->json([
-            'message' => 'Categoria atualizada com sucesso.'
+            'message' => 'Categoria atualizada com sucesso.',
         ]);
     }
 }

@@ -6,13 +6,13 @@ use App\Entity\User;
 use App\Exception\UserException;
 use App\Form\UserType;
 use App\Repository\UserRepository;
+use DateTime;
+use DateTimeZone;
+use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
-use DateTime;
-use DateTimeZone;
-use Exception;
 use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
 
 /**
@@ -22,8 +22,6 @@ class UserController extends AbstractController
 {
     /**
      * @Route("/", name="index", methods={"GET"})
-     * @param UserRepository $userRepository
-     * @return JsonResponse
      */
     public function index(UserRepository $userRepository): JsonResponse
     {
@@ -32,8 +30,6 @@ class UserController extends AbstractController
 
     /**
      * @Route("/{id}", name="show", methods={"GET"})
-     * @param User $user
-     * @return JsonResponse
      */
     public function show(User $user): JsonResponse
     {
@@ -42,9 +38,7 @@ class UserController extends AbstractController
 
     /**
      * @Route("/{id}", name="update", methods={"PUT", "PATCH"})
-     * @param User $user
-     * @param Request $request
-     * @return JsonResponse
+     *
      * @throws Exception
      */
     public function update(User $user, Request $request, UserPasswordEncoderInterface $passwordEncoder): JsonResponse
@@ -54,7 +48,7 @@ class UserController extends AbstractController
             $form = $this->createForm(UserType::class, $user);
             $form->submit($userData);
             $user->setUpdatedAt(
-                new DateTime("now", new DateTimeZone('America/Sao_Paulo'))
+                new DateTime('now', new DateTimeZone('America/Sao_Paulo'))
             );
 
             $rolesLoggedUser = $this->getUser()->getRoles();
@@ -72,19 +66,17 @@ class UserController extends AbstractController
 
             return $this->json([
                 'message' => 'Produto atualizado',
-                'product' => $user
+                'product' => $user,
             ]);
         } catch (UserException $userException) {
             return $this->json([
-                'error' => $userException
+                'error' => $userException,
             ]);
         }
     }
 
     /**
      * @Route("/{id}", name="remove", methods={"DELETE"})
-     * @param User $user
-     * @return JsonResponse
      */
     public function remove(User $user): JsonResponse
     {
@@ -98,16 +90,14 @@ class UserController extends AbstractController
             ]);
         } catch (UserException $userException) {
             return $this->json([
-                'error' => $userException
+                'error' => $userException,
             ]);
         }
     }
 
     /**
      * @Route("/", name="create", methods={"POST"})
-     * @param Request $request
-     * @param UserPasswordEncoderInterface $passwordEncoder
-     * @return JsonResponse
+     *
      * @throws Exception
      */
     public function create(Request $request, UserPasswordEncoderInterface $passwordEncoder): JsonResponse
@@ -121,10 +111,10 @@ class UserController extends AbstractController
         $user->setPassword($password);
         $user->setIsActive(true);
         $user->setCreatedAt(
-            new DateTime("now", new DateTimeZone('America/Sao_Paulo'))
+            new DateTime('now', new DateTimeZone('America/Sao_Paulo'))
         );
         $user->setUpdatedAt(
-            new DateTime("now", new DateTimeZone('America/Sao_Paulo'))
+            new DateTime('now', new DateTimeZone('America/Sao_Paulo'))
         );
 
         try {
@@ -134,11 +124,11 @@ class UserController extends AbstractController
 
             return $this->json([
                 'message' => 'Cadastrado com sucesso.',
-                'user' => $user
+                'user' => $user,
             ]);
         } catch (UserException $userException) {
             return $this->json([
-                'error' => $userException
+                'error' => $userException,
             ]);
         }
     }
