@@ -25,7 +25,7 @@ class Product implements JsonSerializable
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="o nome não pode ser nulo", payload={"severity"="error"})
-     * @Assert\Type(type="\string")
+     * @Assert\Type(type="string")
      */
     private string $name;
 

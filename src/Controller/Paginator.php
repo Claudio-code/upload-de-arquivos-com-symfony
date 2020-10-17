@@ -1,14 +1,14 @@
 <?php
 
-namespace App\Service;
+namespace App\Controller;
 
 use Pagerfanta\Adapter\ArrayAdapter;
 use Pagerfanta\Pagerfanta;
 use Symfony\Component\HttpFoundation\Request;
 
-class PaginatorFactory
+trait Paginator
 {
-    public function paginate(array $queryBuilder, Request $request, string $route)
+    public function paginate(array $queryBuilder, Request $request, string $route): array
     {
         $currentPage = $request->query->get('page', 1);
         $adapter = new ArrayAdapter($queryBuilder);

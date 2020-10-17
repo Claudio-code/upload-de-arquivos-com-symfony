@@ -6,7 +6,6 @@ use App\Entity\Product;
 use App\Exception\ProductException;
 use App\Form\ProductType;
 use App\Repository\ProductRepository;
-use App\Service\PaginatorFactory;
 use DateTime;
 use DateTimeZone;
 use Exception;
@@ -22,6 +21,7 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 class ProductController extends AbstractController
 {
     use ErrorsValidateEntity;
+    use Paginator;
 
     /**
      * @Route("/{id}", name="update", methods={"PATCH", "PUT"})
@@ -99,14 +99,14 @@ class ProductController extends AbstractController
     public function index(
         ProductRepository $productRepository,
         Request $request,
-        PaginatorFactory $paginatorFactory
+        Paginator $paginator
     ): JsonResponse {
         $fields = $request->query->get('fields', false);
         $filters = $request->query->get('filters', null);
         $limit = $request->query->get('limit', false);
 
         $products = $productRepository->getProductsByFilters($filters, $limit, $fields);
-        $productsResult = $paginatorFactory->paginate($products, $request, 'products_index');
+        $productsResult = $paginator->paginate($products, $request, 'products_index');
 
         return $this->json($productsResult);
     }
