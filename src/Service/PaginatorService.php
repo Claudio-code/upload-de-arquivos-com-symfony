@@ -48,11 +48,11 @@ class PaginatorService
         ];
 
         if ($pagerfanta->hasPreviousPage()) {
-            $links['prev'] = $pagerfanta->getPreviousPage();
+            $links['prev'] = $this->generateLink($routeName, $router, [], $pagerfanta->getPreviousPage());
         }
 
         if ($pagerfanta->hasNextPage()) {
-            $links['next'] = $pagerfanta->getNextPage();
+            $links['next'] = $this->generateLink($routeName, $router, [], $pagerfanta->getNextPage());
         }
 
         return $links;
