@@ -35,25 +35,25 @@ class PaginatorService
         return [
             'data' => $paginator->getCurrentPageResults(),
             'total' => $paginator->getNbResults(),
-            'links' => $this->mountLink($paginator, $routeName, $this->routerInterface),
+            'links' => $this->mountLink($paginator, $routeName, $this->routerInterface, $request->query->all()),
         ];
     }
 
-    private function mountLink(Pagerfanta $pagerfanta, string $routeName, RouterInterface $router): array
+    private function mountLink(Pagerfanta $pagerfanta, string $routeName, RouterInterface $router, array $routeParams = []): array
     {
         $links = [
-            'self' => $this->generateLink($routeName, $router, [], $pagerfanta->getCurrentPage()),
-            'first' => $this->generateLink($routeName, $router, [], 1),
-            'last' => $this->generateLink($routeName, $router, [], $pagerfanta->getNbPages()),
+            'self' => $this->generateLink($routeName, $router, $routeParams, $pagerfanta->getCurrentPage()),
+            'first' => $this->generateLink($routeName, $router, $routeParams, 1),
+            'last' => $this->generateLink($routeName, $router, $routeParams, $pagerfanta->getNbPages()),
         ];
 
         if ($pagerfanta->hasPreviousPage()) {
-            $links['prev'] = $this->generateLink($routeName, $router, [], $pagerfanta->getPreviousPage());
+            $links['prev'] = $this->generateLink($routeName, $router, $routeParams, $pagerfanta->getPreviousPage());
+
+            return $links;
         }
 
-        if ($pagerfanta->hasNextPage()) {
-            $links['next'] = $this->generateLink($routeName, $router, [], $pagerfanta->getNextPage());
-        }
+        $links['next'] = $this->generateLink($routeName, $router, $routeParams, $pagerfanta->getNextPage());
 
         return $links;
     }
@@ -64,6 +64,8 @@ class PaginatorService
         array $routeParams = [],
         int $page = 1
     ): string {
+        unset($routeParams['page']);
+
         return $router->generate($routeName, [...$routeParams, 'page' => $page]);
     }
 }
