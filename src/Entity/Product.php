@@ -25,22 +25,28 @@ class Product implements JsonSerializable
     /**
      * @ORM\Column(type="string", length=255)
      * @Assert\NotBlank(message="o nome não pode ser nulo", payload={"severity"="error"})
-     * @Assert\Type(type="string")
+     * @Assert\Type(type="string", message="O nome não pode ser uma string")
      */
     private string $name;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="a descrição não pode ser nula")
+     * @Assert\Type(type="string", message="A descrição deve ser uma string")
      */
     private string $description;
 
     /**
      * @ORM\Column(type="text", length=255)
+     * @Assert\NotBlank(message="O conteudo não pode ser nulo")
+     * @Assert\Type(type="string", message="O conteudo deve ser uma string")
      */
     private string $content;
 
     /**
      * @ORM\Column(type="integer")
+     * @Assert\NotBlank(message="O preço não pode ser nulo")
+     * @Assert\Type(type="int", message="O tipo do preço deve ser um inteiro	")
      */
     private int $price;
 

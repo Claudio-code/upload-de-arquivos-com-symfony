@@ -23,11 +23,15 @@ class Category implements JsonSerializable
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="o nome não pode ser nulo")
+     * @Assert\Type(type="string", message="O nome não pode ser uma string")
      */
     private string $name;
 
     /**
      * @ORM\Column(type="string", length=255)
+     * @Assert\NotBlank(message="a descrição não pode ser nulo", payload={"severity"="error"})
+     * @Assert\Type(type="string", message="a descricao não pode ser uma string")
      */
     private string $description;
 
