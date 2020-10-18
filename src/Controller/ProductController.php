@@ -71,14 +71,8 @@ class ProductController extends AbstractController
         $form = $this->createForm(ProductType::class, $product);
         $form->submit($data);
 
-        if (!$form->isValid()) {
-            $errors = [];
-
-            foreach ($form->getErrors() as $error) {
-                $errors[] = $error->getMessage();
-            }
-
-            return $this->json($errors);
+        if ($errors = $this->validate($validator, $product)) {
+            return $this->json(['errors' => $errors], 400);
         }
 
         $product->setIsActive(true);
@@ -88,11 +82,6 @@ class ProductController extends AbstractController
         $product->setUpdatedAt(
             new DateTime('now', new DateTimeZone('America/Sao_Paulo'))
         );
-
-        // $errors = $this->validate($validator, $product);
-        // if ($errors) {
-        //     return $this->json(['errors' => $errors]);
-        // }
 
         try {
             $manager = $this->getDoctrine()->getManager();

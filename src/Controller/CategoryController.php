@@ -12,12 +12,15 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 /**
  * @Route("/category", name="category_")
  */
 class CategoryController extends AbstractController
 {
+    use ErrorsValidateEntity;
+
     /**
      * @Route("/", name="index", methods={"GET"})
      */
@@ -53,12 +56,16 @@ class CategoryController extends AbstractController
      *
      * @throws Exception
      */
-    public function create(Request $request): JsonResponse
+    public function create(Request $request, ValidatorInterface $validator): JsonResponse
     {
         $data = $request->request->all();
         $category = new Category();
         $form = $this->createForm(CategoryType::class, $category);
         $form->submit($data);
+
+        if ($errors = $this->validate($validator, $category)) {
+            return $this->json($errors);
+        }
 
         $category->setCreatedAt(
             new DateTime('now', new DateTimeZone('America/Sao_Paulo'))
