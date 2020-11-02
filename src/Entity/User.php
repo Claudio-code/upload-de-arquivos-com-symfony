@@ -24,22 +24,22 @@ class User implements JsonSerializable, UserInterface
 
     /**
      * @ORM\Column(type="string", length=255)
-	 * @Assert\NotBlank(message="O primeiro nome não pode ser nulo")
-	 * @Assert\Type(type="string", message="O primeiro nome deve ser uma string")
+     * @Assert\NotBlank(message="O primeiro nome não pode ser nulo")
+     * @Assert\Type(type="string", message="O primeiro nome deve ser uma string")
      */
     private string $firstName;
 
     /**
      * @ORM\Column(type="string", length=255)
-	 * @Assert\NotBlank(message="O segundo nome nao pode ser nulo")
-	 * @Assert\Type(type="string", message="O tipo do segundo nome deve ser uma string")
+     * @Assert\NotBlank(message="O segundo nome nao pode ser nulo")
+     * @Assert\Type(type="string", message="O tipo do segundo nome deve ser uma string")
      */
     private string $lastName;
 
     /**
      * @ORM\Column(type="string", length=255)
-	 * @Assert\Email(message="O parametro envidado não é um email valido")
-	 * @Assert\Type(type="string", message="O email deve ser uma string")
+     * @Assert\Email(message="O parametro envidado não é um email valido")
+     * @Assert\Type(type="string", message="O email deve ser uma string")
      */
     private string $email;
 
