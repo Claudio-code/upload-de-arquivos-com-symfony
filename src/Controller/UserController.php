@@ -20,27 +20,34 @@ use Symfony\Component\Security\Core\Encoder\UserPasswordEncoderInterface;
  */
 class UserController extends AbstractController
 {
-    /**
-     * @Route("/", name="index", methods={"GET"})
-     */
+	/**
+	 * @Route("/", name="index", methods={"GET"})
+	 * @param UserRepository $userRepository
+	 * @return JsonResponse
+	 */
     public function index(UserRepository $userRepository): JsonResponse
     {
         return $this->json($userRepository->findAll());
     }
 
-    /**
-     * @Route("/{id}", name="show", methods={"GET"})
-     */
+	/**
+	 * @Route("/{id}", name="show", methods={"GET"})
+	 * @param User $user
+	 * @return JsonResponse
+	 */
     public function show(User $user): JsonResponse
     {
         return $this->json($user);
     }
 
-    /**
-     * @Route("/{id}", name="update", methods={"PUT", "PATCH"})
-     *
-     * @throws Exception
-     */
+	/**
+	 * @Route("/{id}", name="update", methods={"PUT", "PATCH"})
+	 * @param User $user
+	 * @param Request $request
+	 * @param UserPasswordEncoderInterface $passwordEncoder
+	 * @return JsonResponse
+	 * @throws Exception
+	 */
     public function update(User $user, Request $request, UserPasswordEncoderInterface $passwordEncoder): JsonResponse
     {
         try {
@@ -75,9 +82,11 @@ class UserController extends AbstractController
         }
     }
 
-    /**
-     * @Route("/{id}", name="remove", methods={"DELETE"})
-     */
+	/**
+	 * @Route("/{id}", name="remove", methods={"DELETE"})
+	 * @param User $user
+	 * @return JsonResponse
+	 */
     public function remove(User $user): JsonResponse
     {
         try {
@@ -95,11 +104,13 @@ class UserController extends AbstractController
         }
     }
 
-    /**
-     * @Route("/", name="create", methods={"POST"})
-     *
-     * @throws Exception
-     */
+	/**
+	 * @Route("/", name="create", methods={"POST"})
+	 * @param Request $request
+	 * @param UserPasswordEncoderInterface $passwordEncoder
+	 * @return JsonResponse
+	 * @throws Exception
+	 */
     public function create(Request $request, UserPasswordEncoderInterface $passwordEncoder): JsonResponse
     {
         $userData = $request->request->all();

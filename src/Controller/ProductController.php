@@ -30,11 +30,13 @@ class ProductController extends AbstractController
         $this->paginatorService = $paginatorService;
     }
 
-    /**
-     * @Route("/{id}", name="update", methods={"PATCH", "PUT"})
-     *
-     * @throws Exception
-     */
+	/**
+	 * @Route("/{id}", name="update", methods={"PATCH", "PUT"})
+	 * @param Product $product
+	 * @param Request $request
+	 * @return JsonResponse
+	 * @throws Exception
+	 */
     public function update(Product $product, Request $request): JsonResponse
     {
         $data = $request->request->all();
@@ -59,11 +61,13 @@ class ProductController extends AbstractController
         }
     }
 
-    /**
-     * @Route("/", name="create", methods={"POST"})
-     *
-     * @throws Exception
-     */
+	/**
+	 * @Route("/", name="create", methods={"POST"})
+	 * @param Request $request
+	 * @param ValidatorInterface $validator
+	 * @return JsonResponse
+	 * @throws Exception
+	 */
     public function create(Request $request, ValidatorInterface $validator): JsonResponse
     {
         $data = $request->request->all();
@@ -99,9 +103,12 @@ class ProductController extends AbstractController
         }
     }
 
-    /**
-     * @Route("/", name="index", methods={"GET"})
-     */
+	/**
+	 * @Route("/", name="index", methods={"GET"})
+	 * @param ProductRepository $productRepository
+	 * @param Request $request
+	 * @return JsonResponse
+	 */
     public function index(
         ProductRepository $productRepository,
         Request $request
@@ -116,17 +123,21 @@ class ProductController extends AbstractController
         return $this->json($productsResult);
     }
 
-    /**
-     * @Route("/{id}", name="show", methods={"GET"})
-     */
+	/**
+	 * @Route("/{id}", name="show", methods={"GET"})
+	 * @param Product $product
+	 * @return JsonResponse
+	 */
     public function show(Product $product): JsonResponse
     {
         return $this->json($product);
     }
 
-    /**
-     * @Route("/{id}", name="remove", methods={"DELETE"})
-     */
+	/**
+	 * @Route("/{id}", name="remove", methods={"DELETE"})
+	 * @param Product $product
+	 * @return JsonResponse
+	 */
     public function remove(Product $product): JsonResponse
     {
         try {
