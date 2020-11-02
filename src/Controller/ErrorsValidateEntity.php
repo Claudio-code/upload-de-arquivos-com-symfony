@@ -6,11 +6,11 @@ use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 trait ErrorsValidateEntity
 {
-	/**
-	 * @param ValidatorInterface $validator
-	 * @param mixed $entity
-	 * @return mixed
-	 */
+    /**
+     * @param mixed $entity
+     *
+     * @return mixed
+     */
     private function validate(ValidatorInterface $validator, $entity)
     {
         $messages = [];

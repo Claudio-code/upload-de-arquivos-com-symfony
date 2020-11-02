@@ -21,31 +21,25 @@ class CategoryController extends AbstractController
 {
     use ErrorsValidateEntity;
 
-	/**
-	 * @Route("/", name="index", methods={"GET"})
-	 * @param CategoryRepository $categoryRepository
-	 * @return JsonResponse
-	 */
+    /**
+     * @Route("/", name="index", methods={"GET"})
+     */
     public function index(CategoryRepository $categoryRepository): JsonResponse
     {
         return $this->json($categoryRepository->findAll());
     }
 
-	/**
-	 * @Route("/{id}", name="show", methods={"GET"})
-	 * @param Category $category
-	 * @return JsonResponse
-	 */
+    /**
+     * @Route("/{id}", name="show", methods={"GET"})
+     */
     public function show(Category $category): JsonResponse
     {
         return $this->json($category);
     }
 
-	/**
-	 * @Route("/{id}", name="remove", methods={"DELETE"})
-	 * @param Category $category
-	 * @return JsonResponse
-	 */
+    /**
+     * @Route("/{id}", name="remove", methods={"DELETE"})
+     */
     public function remove(Category $category): JsonResponse
     {
         $manager = $this->getDoctrine()->getManager();
@@ -57,13 +51,11 @@ class CategoryController extends AbstractController
         ]);
     }
 
-	/**
-	 * @Route("/", name="create", methods={"POST"})
-	 * @param Request $request
-	 * @param ValidatorInterface $validator
-	 * @return JsonResponse
-	 * @throws Exception
-	 */
+    /**
+     * @Route("/", name="create", methods={"POST"})
+     *
+     * @throws Exception
+     */
     public function create(Request $request, ValidatorInterface $validator): JsonResponse
     {
         $data = $request->request->all();
@@ -91,13 +83,11 @@ class CategoryController extends AbstractController
         ]);
     }
 
-	/**
-	 * @Route("/{id}", name="update", methods={"PUT", "PATCH"})
-	 * @param Category $category
-	 * @param Request $request
-	 * @return JsonResponse
-	 * @throws Exception
-	 */
+    /**
+     * @Route("/{id}", name="update", methods={"PUT", "PATCH"})
+     *
+     * @throws Exception
+     */
     public function update(Category $category, Request $request): JsonResponse
     {
         $data = $request->request->all();
