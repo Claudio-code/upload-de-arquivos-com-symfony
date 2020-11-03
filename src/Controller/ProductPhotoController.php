@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Product;
+use App\Service\UploadService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -14,6 +15,13 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ProductPhotoController extends AbstractController
 {
+	private UploadService $uploadService;
+	
+	public function __construct()
+	{
+		$this->uploadService = new UploadService($this->getParameter('upload_dir'));
+	}
+
 	/**
 	 * @Route("/{productId}/photo", name="index", methods={"GET"})
 	 * @param Product $product
@@ -34,18 +42,9 @@ class ProductPhotoController extends AbstractController
     public function create(Request $request): JsonResponse
 	{
 		$photos = $request->files->get('photos', []);
-		foreach ($photos as $photo) {
-			if (!$photo instanceof UploadedFile) {
-				continue;
-			}
-
-			$imageName = sha1($photo->getClientOriginalName()) . uniqid() . '.' . $photo->guessExtension();
-			$photo->move($this->getParameter('upload_dir'), $imageName);
-		}
+		$this->uploadService->execute([...$photos]);
 		
-		return $this->json([
-			'message' => 'upload sucess.',
-		]);		
+		return $this->json([ 'message' => 'upload sucess.' ]);
 	}
 
 	/**

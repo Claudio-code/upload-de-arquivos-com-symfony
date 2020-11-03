@@ -73,11 +73,17 @@ class Product implements JsonSerializable
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Category", inversedBy="products")
      */
-    private $categories;
+    private ?ArrayCollection $categories = null;
+
+	/**
+	 * @ORM\OneToMany(targetEntity="ProductPhoto", mappedBy="product")
+	 */
+    private ?ArrayCollection $photos = null;
 
     public function __construct()
     {
         $this->categories = new ArrayCollection();
+        $this->photos = new ArrayCollection();
     }
 
     public function getId(): ?int
