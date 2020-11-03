@@ -79,4 +79,20 @@ class ProductPhoto
 
         return $this;
     }
+
+	/**
+	 * @return Product|null
+	 */
+	public function getProduct(): ?Product
+	{
+		return $this->product;
+	}
+
+	/**
+	 * @param Product|null $product
+	 */
+	public function setProduct(?Product $product): void
+	{
+		$this->product = $product;
+	}
 }

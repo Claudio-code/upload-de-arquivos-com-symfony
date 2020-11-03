@@ -198,6 +198,22 @@ class Product implements JsonSerializable
         $this->categories = $categories;
     }
 
+	/**
+	 * @return ArrayCollection|null
+	 */
+	public function getPhotos(): ?ArrayCollection
+	{
+		return $this->photos;
+	}
+
+	/**
+	 * @param ArrayCollection|null $photos
+	 */
+	public function setPhotos(?ArrayCollection $photos): void
+	{
+		$this->photos = $photos;
+	}
+
     public function jsonSerialize(): array
     {
         return [
