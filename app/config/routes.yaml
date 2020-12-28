@@ -4,7 +4,7 @@
 controllers:
     resource: '../src/Controller'
     type: annotation
-    prefix: /api
+    # prefix: /api
 
 api_login_check:
     path: /api/login_check
