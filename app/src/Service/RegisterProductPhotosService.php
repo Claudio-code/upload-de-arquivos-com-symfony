@@ -3,20 +3,24 @@
 
 namespace App\Service;
 
-
 use App\Entity\ProductPhoto;
 
 class RegisterProductPhotosService
 {
-	public ProductPhoto $productPhoto;
+	private ProductPhoto $productPhoto;
 	
-	public function __construct(ProductPhoto $productPhoto)
+	private UploadService $uploadService;
+	
+	public function __construct(ProductPhoto $productPhoto, string $directory)
 	{
 		$this->productPhoto = $productPhoto;
+		$this->uploadService = new UploadService($directory);
 	}
 	
 	public function execute(array $photos): void
 	{
+		$photosNames = $this->uploadService->execute($photos);
+		
 		
 	}
 }

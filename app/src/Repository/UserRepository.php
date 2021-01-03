@@ -14,6 +14,9 @@ use Doctrine\Persistence\ManagerRegistry;
  */
 class UserRepository extends ServiceEntityRepository
 {
+	use SyncEntities;
+	use DeleteEntities;
+	
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, User::class);
