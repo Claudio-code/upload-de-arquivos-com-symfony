@@ -25,6 +25,7 @@ class RegisterProductPhotosService
 		$this->uploadService = $uploadService;
 		$this->productRepository = $productRepository;
 		$this->productPhotoRepository = $productPhotoRepository;
+		$this->uploadService->setAllowedFiles(['png', 'jpg']);
 	}
 
 	public function execute(array $photos, int $productId): void

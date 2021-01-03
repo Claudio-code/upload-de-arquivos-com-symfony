@@ -8,12 +8,19 @@ class UploadService
 {
 	private string $directory;
 	
+	private array $allowedFiles = [];
+	
 	public function __construct(string $directory)
 	{
 		$this->directory = $directory;
 	}
+
+	public function setAllowedFiles(array $allowedFiles): void
+	{
+		$this->allowedFiles = $allowedFiles;
+	}
 	
-	public function createNewFileName(UploadedFile $file): string
+	private function createNewFileName(UploadedFile $file): string
 	{
 		return sha1($file->getClientOriginalName()) . uniqid() . '.' . $file->guessExtension();
 	}
@@ -22,7 +29,7 @@ class UploadService
 	{
 		$uploadFiles = [];
 		foreach ($files as $file) {
-			if (!$file instanceof UploadedFile) {
+			if (!$file instanceof UploadedFile || !in_array($file->guessExtension(), $this->allowedFiles)) {
 				continue;
 			}
 
