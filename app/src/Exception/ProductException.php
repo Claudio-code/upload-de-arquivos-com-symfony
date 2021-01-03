@@ -3,8 +3,9 @@
 namespace App\Exception;
 
 use Throwable;
+use Exception;
 
-class ProductException extends \Exception
+class ProductException extends Exception
 {
     public function __construct($message = '', $code = 0, Throwable $previous = null)
     {

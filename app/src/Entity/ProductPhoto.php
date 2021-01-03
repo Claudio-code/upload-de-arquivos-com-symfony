@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
  * @ORM\Entity(repositoryClass=ProductPhotoRepository::class)
  * @ORM\Table(name="product_photos")
  */
-class ProductPhoto
+class ProductPhoto implements \JsonSerializable
 {
     /**
      * @ORM\Id
@@ -94,5 +94,15 @@ class ProductPhoto
 	public function setProduct(?Product $product): void
 	{
 		$this->product = $product;
+	}
+
+	public function jsonSerialize(): array
+	{
+		return [
+			'id' => $this->getId(),
+			'image' => $this->getImage(),
+			'createdAt' => $this->getCreatedAt(),
+			'updatedAt' => $this->getUpdatedAt(),
+		];
 	}
 }

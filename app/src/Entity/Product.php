@@ -201,7 +201,7 @@ class Product implements JsonSerializable
 	/**
 	 * @return ArrayCollection|null
 	 */
-	public function getPhotos(): ?ArrayCollection
+	public function getPhotos()
 	{
 		return $this->photos;
 	}

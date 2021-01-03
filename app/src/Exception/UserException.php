@@ -3,8 +3,9 @@
 namespace App\Exception;
 
 use Throwable;
+use Exception;
 
-class UserException extends \Exception
+class UserException extends Exception
 {
     public function __construct($message = '', $code = 0, Throwable $previous = null)
     {
