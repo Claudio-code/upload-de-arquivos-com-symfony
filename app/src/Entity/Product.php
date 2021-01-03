@@ -73,12 +73,12 @@ class Product implements JsonSerializable
     /**
      * @ORM\ManyToMany(targetEntity="App\Entity\Category", inversedBy="products")
      */
-    private $categories = null;
+    private $categories;
 
-	/**
-	 * @ORM\OneToMany(targetEntity="ProductPhoto", mappedBy="product")
-	 */
-    private $photos = null;
+    /**
+     * @ORM\OneToMany(targetEntity="ProductPhoto", mappedBy="product")
+     */
+    private $photos;
 
     public function __construct(string $directory)
     {
@@ -198,27 +198,27 @@ class Product implements JsonSerializable
         $this->categories = $categories;
     }
 
-	/**
-	 * @return ArrayCollection|null
-	 */
-	public function getPhotos()
-	{
-		return $this->photos;
-	}
-	
-	public function getPhotosAndPath(string $directory): array
-	{
-		$photosAndPath = $this->photos->map(function (ProductPhoto $photo) use ($directory) {
-			return "{$directory}/{$photo->getImage()}";
-		});
-		
-		return $photosAndPath->toArray();
-	}
+    /**
+     * @return null|ArrayCollection
+     */
+    public function getPhotos()
+    {
+        return $this->photos;
+    }
 
-	public function setPhotos(?ArrayCollection $photos): void
-	{
-		$this->photos = $photos;
-	}
+    public function getPhotosAndPath(string $directory): array
+    {
+        $photosAndPath = $this->photos->map(function (ProductPhoto $photo) use ($directory) {
+            return "{$directory}/{$photo->getImage()}";
+        });
+
+        return $photosAndPath->toArray();
+    }
+
+    public function setPhotos(?ArrayCollection $photos): void
+    {
+        $this->photos = $photos;
+    }
 
     public function jsonSerialize(): array
     {

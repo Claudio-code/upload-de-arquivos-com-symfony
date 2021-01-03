@@ -2,8 +2,8 @@
 
 namespace App\Exception;
 
-use Throwable;
 use Exception;
+use Throwable;
 
 class ProductException extends Exception
 {

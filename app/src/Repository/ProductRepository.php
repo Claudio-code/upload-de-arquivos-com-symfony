@@ -15,8 +15,8 @@ use Doctrine\Persistence\ManagerRegistry;
 class ProductRepository extends ServiceEntityRepository
 {
     use FilterTransform;
-	use SyncEntities;
-	use DeleteEntities;
+    use SyncEntities;
+    use DeleteEntities;
 
     public function __construct(ManagerRegistry $registry)
     {

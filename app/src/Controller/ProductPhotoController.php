@@ -8,7 +8,6 @@ use App\Exception\ProductPhotoException;
 use App\Service\RegisterProductPhotosService;
 use App\Service\RemoveFileService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Annotation\Route;
@@ -18,66 +17,66 @@ use Symfony\Component\Routing\Annotation\Route;
  */
 class ProductPhotoController extends AbstractController
 {
-	private RegisterProductPhotosService $registerProductPhotosService;
-	
-	private RemoveFileService $removeFileService;
+    private RegisterProductPhotosService $registerProductPhotosService;
 
-	public function __construct(
-		RegisterProductPhotosService $registerProductPhotosService,
-		RemoveFileService $removeFileService
-	) {
-		$this->registerProductPhotosService = $registerProductPhotosService;
-		$this->removeFileService = $removeFileService;
-	}
+    private RemoveFileService $removeFileService;
 
-	/**
-	 * @Route("/{id}/photo", name="index", methods={"GET"})
-	 */
-	public function index(Product $product): JsonResponse
-	{
-		return $this->json($product->getPhotosAndPath($this->getParameter('upload_dir')));
-	}
+    public function __construct(
+        RegisterProductPhotosService $registerProductPhotosService,
+        RemoveFileService $removeFileService
+    ) {
+        $this->registerProductPhotosService = $registerProductPhotosService;
+        $this->removeFileService = $removeFileService;
+    }
 
-	/**
-	 * @Route("/photos", name="create", methods={"POST"})
-	 */
-	public function create(Request $request): JsonResponse
-	{
-		$photos = $request->files->get('photos', []);
-		$productId = $request->get('product_id', null);
-		
-		try {
-			if (!$productId) {
-				throw new ProductPhotoException(
-					'Id do produto não enviado.',
-					401
-				);
-			}
-			$this->registerProductPhotosService->execute([...$photos], intval($productId));
+    /**
+     * @Route("/{id}/photo", name="index", methods={"GET"})
+     */
+    public function index(Product $product): JsonResponse
+    {
+        return $this->json($product->getPhotosAndPath($this->getParameter('upload_dir')));
+    }
 
-			return $this->json([
-				'message' => 'upload success.'
-			], 201);
-		} catch (ProductPhotoException $productPhotoException) {
-			return $this->json([
-				'error' => $productPhotoException->getMessage()
-			], $productPhotoException->getCode());
-		} catch (\Exception $exception) {
-			return $this->json([
-				'error' => $exception->getMessage()
-			], $exception->getCode());
-		}
-	}
+    /**
+     * @Route("/photos", name="create", methods={"POST"})
+     */
+    public function create(Request $request): JsonResponse
+    {
+        $photos = $request->files->get('photos', []);
+        $productId = $request->get('product_id', null);
 
-	/**
-	 * @Route("/photo/{id}", name="remove", methods={"DELETE"})
-	 */
-	public function remove(ProductPhoto $productPhoto): JsonResponse
-	{
-		$this->removeFileService->execute($productPhoto);
-		
-		return $this->json([
-			'message' => 'arquivo removido com sucesso.'
-		]);
-	}
+        try {
+            if (!$productId) {
+                throw new ProductPhotoException(
+                    'Id do produto não enviado.',
+                    401
+                );
+            }
+            $this->registerProductPhotosService->execute([...$photos], intval($productId));
+
+            return $this->json([
+                'message' => 'upload success.',
+            ], 201);
+        } catch (ProductPhotoException $productPhotoException) {
+            return $this->json([
+                'error' => $productPhotoException->getMessage(),
+            ], $productPhotoException->getCode());
+        } catch (\Exception $exception) {
+            return $this->json([
+                'error' => $exception->getMessage(),
+            ], $exception->getCode());
+        }
+    }
+
+    /**
+     * @Route("/photo/{id}", name="remove", methods={"DELETE"})
+     */
+    public function remove(ProductPhoto $productPhoto): JsonResponse
+    {
+        $this->removeFileService->execute($productPhoto);
+
+        return $this->json([
+            'message' => 'arquivo removido com sucesso.',
+        ]);
+    }
 }

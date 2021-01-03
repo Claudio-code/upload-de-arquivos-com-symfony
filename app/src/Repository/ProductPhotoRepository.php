@@ -7,16 +7,16 @@ use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @method ProductPhoto|null find($id, $lockMode = null, $lockVersion = null)
- * @method ProductPhoto|null findOneBy(array $criteria, array $orderBy = null)
+ * @method null|ProductPhoto find($id, $lockMode = null, $lockVersion = null)
+ * @method null|ProductPhoto findOneBy(array $criteria, array $orderBy = null)
  * @method ProductPhoto[]    findAll()
  * @method ProductPhoto[]    findBy(array $criteria, array $orderBy = null, $limit = null, $offset = null)
  */
 class ProductPhotoRepository extends ServiceEntityRepository
 {
-	use SyncEntities;
-	use DeleteEntities;
-	
+    use SyncEntities;
+    use DeleteEntities;
+
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, ProductPhoto::class);

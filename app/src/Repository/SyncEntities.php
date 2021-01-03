@@ -7,15 +7,15 @@ use DateTimeZone;
 
 trait SyncEntities
 {
-	public function runSync(object $doctrineEntity): object
-	{
-		$doctrineEntity->setUpdatedAt(
-			new DateTime('now', new DateTimeZone('America/Sao_Paulo'))
-		);
+    public function runSync(object $doctrineEntity): object
+    {
+        $doctrineEntity->setUpdatedAt(
+            new DateTime('now', new DateTimeZone('America/Sao_Paulo'))
+        );
 
-		$this->getEntityManager()->persist($doctrineEntity);
-		$this->getEntityManager()->flush();
+        $this->getEntityManager()->persist($doctrineEntity);
+        $this->getEntityManager()->flush();
 
-		return $doctrineEntity;
-	}
+        return $doctrineEntity;
+    }
 }
