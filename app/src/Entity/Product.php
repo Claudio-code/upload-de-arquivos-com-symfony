@@ -80,7 +80,7 @@ class Product implements JsonSerializable
 	 */
     private $photos = null;
 
-    public function __construct()
+    public function __construct(string $directory)
     {
         $this->categories = new ArrayCollection();
         $this->photos = new ArrayCollection();
@@ -205,10 +205,16 @@ class Product implements JsonSerializable
 	{
 		return $this->photos;
 	}
+	
+	public function getPhotosAndPath(string $directory): array
+	{
+		$photosAndPath = $this->photos->map(function (ProductPhoto $photo) use ($directory) {
+			return "{$directory}/{$photo->getImage()}";
+		});
+		
+		return $photosAndPath->toArray();
+	}
 
-	/**
-	 * @param ArrayCollection|null $photos
-	 */
 	public function setPhotos(?ArrayCollection $photos): void
 	{
 		$this->photos = $photos;

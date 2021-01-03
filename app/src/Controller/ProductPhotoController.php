@@ -3,8 +3,10 @@
 namespace App\Controller;
 
 use App\Entity\Product;
+use App\Entity\ProductPhoto;
 use App\Exception\ProductPhotoException;
 use App\Service\RegisterProductPhotosService;
+use App\Service\RemoveFileService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -17,26 +19,27 @@ use Symfony\Component\Routing\Annotation\Route;
 class ProductPhotoController extends AbstractController
 {
 	private RegisterProductPhotosService $registerProductPhotosService;
+	
+	private RemoveFileService $removeFileService;
 
-	public function __construct(RegisterProductPhotosService $registerProductPhotosService)
-	{
+	public function __construct(
+		RegisterProductPhotosService $registerProductPhotosService,
+		RemoveFileService $removeFileService
+	) {
 		$this->registerProductPhotosService = $registerProductPhotosService;
+		$this->removeFileService = $removeFileService;
 	}
 
 	/**
 	 * @Route("/{id}/photo", name="index", methods={"GET"})
-	 * @param Product $product
-	 * @return JsonResponse
 	 */
 	public function index(Product $product): JsonResponse
 	{
-		return $this->json($product->getPhotos()->toArray());
+		return $this->json($product->getPhotosAndPath($this->getParameter('upload_dir')));
 	}
 
 	/**
 	 * @Route("/photos", name="create", methods={"POST"})
-	 * @param Request $request
-	 * @return JsonResponse
 	 */
 	public function create(Request $request): JsonResponse
 	{
@@ -67,14 +70,14 @@ class ProductPhotoController extends AbstractController
 	}
 
 	/**
-	 * @Route("/{productId}/photo/{photoId}", name="remove", methods={"DELETE"})
-	 * @param Product $product
-	 * @return JsonResponse
+	 * @Route("/photo/{id}", name="remove", methods={"DELETE"})
 	 */
-	public function remove(Product $product): JsonResponse
+	public function remove(ProductPhoto $productPhoto): JsonResponse
 	{
+		$this->removeFileService->execute($productPhoto);
+		
 		return $this->json([
-			'message' => 'Welcome to your new controller!'
+			'message' => 'arquivo removido com sucesso.'
 		]);
 	}
 }

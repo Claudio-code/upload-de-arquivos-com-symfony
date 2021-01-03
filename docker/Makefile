@@ -7,5 +7,8 @@ build:
 start:
 	sudo docker-compose up
 
+stop:
+	docker-compose stop
+
 composer:
 	sudo docker-compose run php-fpm composer 
