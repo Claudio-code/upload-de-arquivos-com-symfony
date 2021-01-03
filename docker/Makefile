@@ -2,7 +2,7 @@ rm-containers:
 	sudo docker-compose rm
 
 build:
-	sudo docker-compose up --build
+	sudo docker-compose up --build -d
 
 start:
 	sudo docker-compose up
