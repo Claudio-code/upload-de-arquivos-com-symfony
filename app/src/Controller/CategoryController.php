@@ -7,7 +7,6 @@ use App\Form\CategoryType;
 use App\Repository\CategoryRepository;
 use DateTime;
 use DateTimeZone;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -53,8 +52,6 @@ class CategoryController extends AbstractController
 
     /**
      * @Route("/", name="create", methods={"POST"})
-     *
-     * @throws Exception
      */
     public function create(Request $request, ValidatorInterface $validator): JsonResponse
     {
@@ -85,8 +82,6 @@ class CategoryController extends AbstractController
 
     /**
      * @Route("/{id}", name="update", methods={"PUT", "PATCH"})
-     *
-     * @throws Exception
      */
     public function update(Category $category, Request $request): JsonResponse
     {

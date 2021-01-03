@@ -9,7 +9,6 @@ use App\Repository\ProductRepository;
 use App\Service\PaginatorService;
 use DateTime;
 use DateTimeZone;
-use Exception;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -32,8 +31,6 @@ class ProductController extends AbstractController
 
     /**
      * @Route("/{id}", name="update", methods={"PATCH", "PUT"})
-     *
-     * @throws Exception
      */
     public function update(Product $product, Request $request): JsonResponse
     {
@@ -61,13 +58,11 @@ class ProductController extends AbstractController
 
     /**
      * @Route("/", name="create", methods={"POST"})
-     *
-     * @throws Exception
      */
     public function create(Request $request, ValidatorInterface $validator): JsonResponse
     {
         $data = $request->request->all();
-        $product = new Product();
+        $product = new Product($this->getParameter('upload_dir'));
         $form = $this->createForm(ProductType::class, $product);
         $form->submit($data);
 
